@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { McpModule } from '@nestjs-mcp/server';
 
 import { AuthModule } from './auth/modules/auth.module';
+import { ConnectionsModule } from './connections/modules/connections.module';
 import { OrchestratorModule } from './orchestrator/modules/orchestrator.module';
 import { ProvisionerModule } from './provisioner/modules/provisioner.module';
 import { User } from './auth/entities/user.entity';
@@ -30,6 +31,7 @@ import { Connection } from './connections/entities/connection.entity';
       version: '0.0.1',
     }),
     AuthModule,
+    ConnectionsModule,
     OrchestratorModule,
     ProvisionerModule,
   ],
