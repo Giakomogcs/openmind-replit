@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Connection } from '../entities/connection.entity';
+import { Connection, ConnectionStatus } from '../entities/connection.entity';
 import { OrchestratorService } from '../../orchestrator/services/orchestrator.service';
 
 @Injectable()
@@ -20,10 +20,10 @@ export class ConnectionsService {
         newConnection,
       );
       newConnection.draftSpecification = draftSpecification;
-      newConnection.status = 'PENDING_VALIDATION';
+      newConnection.status = ConnectionStatus.PENDING_VALIDATION;
       await this.connectionsRepository.save(newConnection);
     } catch (error) {
-      newConnection.status = 'ERROR';
+      newConnection.status = ConnectionStatus.ERROR;
       await this.connectionsRepository.save(newConnection);
     }
     return newConnection;

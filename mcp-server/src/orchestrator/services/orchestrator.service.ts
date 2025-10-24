@@ -2,15 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Connection } from '../../connections/entities/connection.entity';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { OpenAI } from 'openai';
+import { GoogleGenerativeAI } from '@google/genai';
 
 @Injectable()
 export class OrchestratorService {
   private readonly logger = new Logger(OrchestratorService.name);
-  private readonly openai: OpenAI;
+  private readonly genAI: GoogleGenerativeAI;
 
   constructor() {
-    this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   }
 
   async diagnose(connection: Connection): Promise<any> {
@@ -41,12 +41,15 @@ export class OrchestratorService {
       The output should be a valid OpenAPI 3.0.0 specification in JSON format.
     `;
     try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: [{ role: 'user', content: prompt }],
-      });
-      const enrichedSpec = JSON.parse(response.choices[0].message.content);
-      return enrichedSpec;
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
+      if (content) {
+        const enrichedSpec = JSON.parse(content);
+        return enrichedSpec;
+      }
+      return spec;
     } catch (error) {
       this.logger.error('Error enriching spec with LLM', error);
       return spec;
