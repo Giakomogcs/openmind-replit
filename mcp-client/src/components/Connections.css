@@ -1,0 +1,119 @@
+.connections-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.connections-header {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #667eea;
+}
+
+.header-content h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.header-content p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.add-connection-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.add-connection-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.connections-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  padding: 40px;
+  text-align: center;
+}
+
+.connections-empty svg {
+  opacity: 0.2;
+  margin-bottom: 20px;
+  color: #667eea;
+}
+
+.connections-empty h3 {
+  margin: 0 0 12px 0;
+  font-size: 22px;
+  color: #666;
+}
+
+.connections-empty p {
+  margin: 0 0 32px 0;
+  font-size: 14px;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.add-connection-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.add-connection-btn-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+@media (max-width: 768px) {
+  .connections-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .add-connection-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

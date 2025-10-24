@@ -1,0 +1,73 @@
+import React, { useEffect } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Home, Database, Folder, Menu, X } from 'lucide-react';
+import './App.css';
+import Canvas from './components/Canvas';
+import Connections from './components/Connections';
+import Collections from './components/Collections';
+import FooterChat from './components/FooterChat';
+import { useAppStore } from './store';
+
+function App() {
+  const location = useLocation();
+  const { uiState, toggleSidebar, loadChatHistory } = useAppStore();
+
+  useEffect(() => {
+    loadChatHistory();
+  }, [loadChatHistory]);
+
+  const isActive = (path: string) => location.pathname === path;
+
+  return (
+    <div className="app-container">
+      <aside className={`sidebar ${uiState.sidebarCollapsed ? 'collapsed' : ''}`}>
+        <div className="sidebar-header">
+          <h1>MCP Platform</h1>
+          <button className="sidebar-toggle" onClick={toggleSidebar}>
+            {uiState.sidebarCollapsed ? <Menu size={20} /> : <X size={20} />}
+          </button>
+        </div>
+        <nav className="sidebar-nav">
+          <Link
+            to="/"
+            className={`nav-item ${isActive('/') ? 'active' : ''}`}
+            title="Canvas"
+          >
+            <Home size={20} />
+            {!uiState.sidebarCollapsed && <span>Canvas</span>}
+          </Link>
+          <Link
+            to="/connections"
+            className={`nav-item ${isActive('/connections') ? 'active' : ''}`}
+            title="Connections"
+          >
+            <Database size={20} />
+            {!uiState.sidebarCollapsed && <span>Connections</span>}
+          </Link>
+          <Link
+            to="/collections"
+            className={`nav-item ${isActive('/collections') ? 'active' : ''}`}
+            title="Collections"
+          >
+            <Folder size={20} />
+            {!uiState.sidebarCollapsed && <span>Collections</span>}
+          </Link>
+        </nav>
+      </aside>
+
+      <main className="main-content">
+        <div className="content-area">
+          <Routes>
+            <Route path="/" element={<Canvas />} />
+            <Route path="/connections" element={<Connections />} />
+            <Route path="/collections" element={<Collections />} />
+          </Routes>
+        </div>
+      </main>
+
+      <FooterChat />
+    </div>
+  );
+}
+
+export default App;

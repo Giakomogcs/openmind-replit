@@ -1,0 +1,13 @@
+.grid-component {
+  width: 100%;
+}
+
+.grid-item {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .grid-component {
+    grid-template-columns: 1fr !important;
+  }
+}
