@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Connection } from '../../connections/entities/connection.entity';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { GoogleGenerativeAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 @Injectable()
 export class OrchestratorService {
@@ -10,7 +10,7 @@ export class OrchestratorService {
   private readonly genAI: GoogleGenerativeAI;
 
   constructor() {
-    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
   }
 
   async diagnose(connection: Connection): Promise<any> {
@@ -43,7 +43,7 @@ export class OrchestratorService {
     try {
       const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
       const result = await model.generateContent(prompt);
-      const response = await result.response;
+      const response = result.response;
       const content = response.text();
       if (content) {
         const enrichedSpec = JSON.parse(content);
