@@ -41,7 +41,7 @@ export class OrchestratorService {
       The output should be a valid OpenAPI 3.0.0 specification in JSON format.
     `;
     try {
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
       const result = await model.generateContent(prompt);
       const response = result.response;
       const content = response.text();
