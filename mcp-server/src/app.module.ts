@@ -6,6 +6,7 @@ import { McpModule } from '@nestjs-mcp/server';
 import { AuthModule } from './auth/modules/auth.module';
 import { OrchestratorModule } from './orchestrator/modules/orchestrator.module';
 import { ProvisionerModule } from './provisioner/modules/provisioner.module';
+import { ConnectionsModule } from './connections/connections.module';
 import { User } from './auth/entities/user.entity';
 import { Connection } from './connections/entities/connection.entity';
 
@@ -32,6 +33,7 @@ import { Connection } from './connections/entities/connection.entity';
     AuthModule,
     OrchestratorModule,
     ProvisionerModule,
+    ConnectionsModule,
   ],
   controllers: [],
   providers: [],
