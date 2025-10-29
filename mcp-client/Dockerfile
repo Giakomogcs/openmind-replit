@@ -3,16 +3,11 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy root and client package files
-COPY package*.json ./
-COPY mcp-client/package*.json ./mcp-client/
-COPY mcp-client/.env.example ./mcp-client/.env
+# Copy all source code first
+COPY . .
 
 # Install all dependencies
 RUN npm install
-
-# Copy client source code
-COPY mcp-client/ ./mcp-client/
 
 # Build the client application
 RUN npm run build --workspace=mcp-client
