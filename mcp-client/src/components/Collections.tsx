@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAppStore } from '../store';
-import { DynamicRenderer } from './dynamic/DynamicRenderer';
-import { Folder, Trash2, Calendar } from 'lucide-react';
-import './Collections.css';
+import React from "react";
+import { useAppStore } from "../store";
+import { DynamicRenderer } from "./dynamic/DynamicRenderer";
+import { Folder, Trash2, Calendar } from "lucide-react";
+// @ts-ignore
+import "./Collections.css";
 
 const Collections: React.FC = () => {
   const { dynamicPages, removeDynamicPage } = useAppStore();
@@ -14,12 +15,12 @@ const Collections: React.FC = () => {
   };
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(date).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -40,11 +41,12 @@ const Collections: React.FC = () => {
           <Folder size={64} />
           <h3>Nenhuma collection ainda</h3>
           <p>
-            Use o chat para criar páginas dinâmicas e sistemas completos.
-            Eles aparecerão aqui!
+            Use o chat para criar páginas dinâmicas e sistemas completos. Eles
+            aparecerão aqui!
           </p>
           <small>
-            Experimente: "Crie um dashboard de vendas" ou "Crie um formulário de contato"
+            Experimente: "Crie um dashboard de vendas" ou "Crie um formulário de
+            contato"
           </small>
         </div>
       ) : (
@@ -61,7 +63,7 @@ const Collections: React.FC = () => {
                   <Trash2 size={16} />
                 </button>
               </div>
-              
+
               <div className="collection-meta">
                 <Calendar size={14} />
                 <span>{formatDate(page.createdAt)}</span>

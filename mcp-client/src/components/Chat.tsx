@@ -57,7 +57,9 @@ const Chat = () => {
       <div style={{ display: "flex", padding: "8px" }}>
         <Input
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInputValue(e.target.value)
+          }
           onPressEnter={handleSendMessage}
           placeholder="Type your message..."
         />

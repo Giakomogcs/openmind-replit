@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Home, Database, Folder, Menu, X, Share2 } from 'lucide-react';
-import './App.css';
-import Canvas from './components/Canvas';
-import Connections from './components/Connections';
-import Collections from './components/Collections';
-import SchemaViewer from './components/SchemaViewer/SchemaViewer';
-import FooterChat from './components/FooterChat';
-import { useAppStore } from './store';
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Home, Database, Folder, Menu, X, Share2 } from "lucide-react";
+// @ts-ignore
+import "./App.css";
+import Canvas from "./components/Canvas";
+import Connections from "./components/Connections";
+import Collections from "./components/Collections";
+import SchemaViewer from "./components/SchemaViewer/SchemaViewer";
+import FooterChat from "./components/FooterChat";
+import { useAppStore } from "./store";
 
 function App() {
   const location = useLocation();
@@ -21,7 +22,9 @@ function App() {
 
   return (
     <div className="app-container">
-      <aside className={`sidebar ${uiState.sidebarCollapsed ? 'collapsed' : ''}`}>
+      <aside
+        className={`sidebar ${uiState.sidebarCollapsed ? "collapsed" : ""}`}
+      >
         <div className="sidebar-header">
           <h1>MCP Platform</h1>
           <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -31,7 +34,7 @@ function App() {
         <nav className="sidebar-nav">
           <Link
             to="/"
-            className={`nav-item ${isActive('/') ? 'active' : ''}`}
+            className={`nav-item ${isActive("/") ? "active" : ""}`}
             title="Canvas"
           >
             <Home size={20} />
@@ -39,7 +42,7 @@ function App() {
           </Link>
           <Link
             to="/connections"
-            className={`nav-item ${isActive('/connections') ? 'active' : ''}`}
+            className={`nav-item ${isActive("/connections") ? "active" : ""}`}
             title="Connections"
           >
             <Database size={20} />
@@ -47,7 +50,7 @@ function App() {
           </Link>
           <Link
             to="/collections"
-            className={`nav-item ${isActive('/collections') ? 'active' : ''}`}
+            className={`nav-item ${isActive("/collections") ? "active" : ""}`}
             title="Collections"
           >
             <Folder size={20} />
@@ -55,7 +58,7 @@ function App() {
           </Link>
           <Link
             to="/projects/1/schema"
-            className={`nav-item ${isActive('/projects/1/schema') ? 'active' : ''}`}
+            className={`nav-item ${isActive("/projects/1/schema") ? "active" : ""}`}
             title="Schema Viewer"
           >
             <Share2 size={20} />
@@ -70,7 +73,10 @@ function App() {
             <Route path="/" element={<Canvas />} />
             <Route path="/connections" element={<Connections />} />
             <Route path="/collections" element={<Collections />} />
-            <Route path="/projects/:projectId/schema" element={<SchemaViewer />} />
+            <Route
+              path="/projects/:projectId/schema"
+              element={<SchemaViewer />}
+            />
           </Routes>
         </div>
       </main>

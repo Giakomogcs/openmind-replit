@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAppStore } from '../store';
-import { DynamicRenderer } from './dynamic/DynamicRenderer';
-import { Sparkles } from 'lucide-react';
-import './Canvas.css';
+import React from "react";
+import { useAppStore } from "../store";
+import { DynamicRenderer } from "./dynamic/DynamicRenderer";
+import { Sparkles } from "lucide-react";
+// @ts-ignore
+import "./Canvas.css";
 
 const Canvas: React.FC = () => {
   const { currentPage } = useAppStore();
@@ -18,7 +19,8 @@ const Canvas: React.FC = () => {
           <Sparkles size={64} />
           <h2>Área de Trabalho</h2>
           <p>
-            Use o chat para criar interfaces dinâmicas que serão renderizadas aqui.
+            Use o chat para criar interfaces dinâmicas que serão renderizadas
+            aqui.
           </p>
           <div className="suggestions">
             <h4>Experimente comandos como:</h4>

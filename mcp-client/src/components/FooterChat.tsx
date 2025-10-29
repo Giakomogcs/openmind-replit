@@ -1,25 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader, Trash2 } from 'lucide-react';
-import { useAppStore } from '../store';
-import { mcpService } from '../services/mcpService';
-import './FooterChat.css';
+import React, { useState, useRef, useEffect } from "react";
+import { MessageCircle, X, Send, Loader, Trash2 } from "lucide-react";
+import { useAppStore } from "../store";
+import { mcpService } from "../services/mcpService";
+// @ts-ignore
+import "./FooterChat.css";
 
 const FooterChat: React.FC = () => {
-  const {
-    messages,
-    uiState,
-    addMessage,
-    toggleFooterChat,
-    clearMessages,
-  } = useAppStore();
+  const { messages, uiState, addMessage, toggleFooterChat, clearMessages } =
+    useAppStore();
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -36,10 +32,10 @@ const FooterChat: React.FC = () => {
     if (!inputValue.trim() || isLoading) return;
 
     const userMessage = inputValue.trim();
-    setInputValue('');
+    setInputValue("");
 
     addMessage({
-      role: 'user',
+      role: "user",
       content: userMessage,
     });
 
@@ -49,7 +45,7 @@ const FooterChat: React.FC = () => {
       const response = await mcpService.sendMessage(userMessage);
 
       addMessage({
-        role: 'assistant',
+        role: "assistant",
         content: response.message,
         componentSchema: response.componentSchema,
       });
@@ -64,8 +60,8 @@ const FooterChat: React.FC = () => {
       }
     } catch (error) {
       addMessage({
-        role: 'system',
-        content: 'Erro ao processar sua mensagem. Tente novamente.',
+        role: "system",
+        content: "Erro ao processar sua mensagem. Tente novamente.",
       });
     } finally {
       setIsLoading(false);
@@ -73,21 +69,23 @@ const FooterChat: React.FC = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
   const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(date).toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   return (
-    <div className={`footer-chat ${uiState.footerChatOpen ? 'open' : 'closed'}`}>
+    <div
+      className={`footer-chat ${uiState.footerChatOpen ? "open" : "closed"}`}
+    >
       <div className="footer-chat-header" onClick={toggleFooterChat}>
         <div className="header-left">
           <MessageCircle size={20} />
@@ -100,9 +98,9 @@ const FooterChat: React.FC = () => {
           {uiState.footerChatOpen && messages.length > 0 && (
             <button
               className="clear-button"
-              onClick={(e) => {
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
-                if (window.confirm('Limpar todo o histórico de chat?')) {
+                if (window.confirm("Limpar todo o histórico de chat?")) {
                   clearMessages();
                 }
               }}
@@ -111,7 +109,11 @@ const FooterChat: React.FC = () => {
               <Trash2 size={16} />
             </button>
           )}
-          {uiState.footerChatOpen ? <X size={20} /> : <MessageCircle size={20} />}
+          {uiState.footerChatOpen ? (
+            <X size={20} />
+          ) : (
+            <MessageCircle size={20} />
+          )}
         </div>
       </div>
 
@@ -122,7 +124,9 @@ const FooterChat: React.FC = () => {
               <div className="empty-state">
                 <MessageCircle size={48} />
                 <p>Comece uma conversa!</p>
-                <small>Digite uma mensagem para criar interfaces dinâmicas</small>
+                <small>
+                  Digite uma mensagem para criar interfaces dinâmicas
+                </small>
               </div>
             ) : (
               messages.map((message) => (
@@ -135,7 +139,9 @@ const FooterChat: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <div className="message-time">{formatTime(message.timestamp)}</div>
+                  <div className="message-time">
+                    {formatTime(message.timestamp)}
+                  </div>
                 </div>
               ))
             )}
@@ -155,7 +161,9 @@ const FooterChat: React.FC = () => {
               ref={inputRef}
               type="text"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputValue(e.target.value)
+              }
               onKeyPress={handleKeyPress}
               placeholder="Digite sua mensagem... (ex: 'crie um dashboard')"
               disabled={isLoading}
@@ -167,7 +175,11 @@ const FooterChat: React.FC = () => {
               className="send-button"
               title="Enviar mensagem"
             >
-              {isLoading ? <Loader className="spinner" size={20} /> : <Send size={20} />}
+              {isLoading ? (
+                <Loader className="spinner" size={20} />
+              ) : (
+                <Send size={20} />
+              )}
             </button>
           </div>
         </div>

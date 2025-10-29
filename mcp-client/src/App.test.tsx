@@ -6,7 +6,7 @@ import { useAppStore } from './store';
 
 jest.mock('./store');
 
-const mockUseAppStore = useAppStore as jest.Mock;
+const mockUseAppStore = useAppStore as unknown as jest.Mock;
 
 test('renders dashboard header', () => {
   mockUseAppStore.mockReturnValue({
