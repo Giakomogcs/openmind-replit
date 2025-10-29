@@ -34,7 +34,7 @@ export class OrchestratorService {
     }
 
     try {
-      const response = await firstValueFrom(this.httpService.get(connection.adapterUrl));
+      const response: any = await firstValueFrom(this.httpService.get(connection.adapterUrl));
       const data = response.data;
 
       if (this.isOpenApiSpec(data)) {

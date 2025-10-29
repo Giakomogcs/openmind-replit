@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
@@ -19,8 +19,12 @@ export class ProjectsService {
     return this.projectRepository.find({ relations: ['connections'] });
   }
 
-  findOne(id: number): Promise<Project> {
-    return this.projectRepository.findOne({ where: { id }, relations: ['connections'] });
+  async findOne(id: number): Promise<Project> {
+    const project = await this.projectRepository.findOne({ where: { id }, relations: ['connections'] });
+    if (!project) {
+      throw new NotFoundException(`Project with ID ${id} not found`);
+    }
+    return project;
   }
 
   async update(id: number, name: string): Promise<Project> {
