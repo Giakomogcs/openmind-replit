@@ -1,9 +1,23 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { useAppStore } from "./store";
 
-test('renders dashboard header', () => {
+jest.mock("./store");
+
+const mockUseAppStore = useAppStore as unknown as jest.Mock;
+
+test("renders dashboard header", () => {
+  mockUseAppStore.mockReturnValue({
+    uiState: {
+      sidebarCollapsed: false,
+    },
+    messages: [],
+    toggleSidebar: jest.fn(),
+    loadChatHistory: jest.fn(),
+  });
+
   render(
     <BrowserRouter>
       <App />
