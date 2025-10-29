@@ -17,7 +17,11 @@ export class ConnectionsService {
     private readonly orchestratorService: OrchestratorService,
     private readonly configService: ConfigService,
   ) {
-    this.encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+        const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+    if (!encryptionKey) {
+      throw new Error('ENCRYPTION_KEY is not set');
+    }
+    this.encryptionKey = encryptionKey;
   }
 
   private encrypt(text: string): string {
