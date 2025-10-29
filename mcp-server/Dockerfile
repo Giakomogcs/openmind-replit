@@ -18,9 +18,9 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy build artifacts and dependencies from the builder stage
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/mcp-server/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
 
-CMD ["node", "dist/mcp-server/src/main"]
+CMD ["node", "dist/main"]

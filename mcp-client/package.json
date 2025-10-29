@@ -23,7 +23,6 @@
     "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.3",
     "eslint-config-react-app": "^7.0.1"
   },
   "scripts": {

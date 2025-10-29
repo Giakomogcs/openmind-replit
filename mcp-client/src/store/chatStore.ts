@@ -10,7 +10,7 @@ interface ChatState {
   addMessage: (message: Message) => void;
 }
 
-export const useChatStore = create<ChatState>((set) => ({
+export const useAppStore = create<ChatState>((set) => ({
   messages: [],
   addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
 }));
