@@ -9,6 +9,8 @@ import { ProvisionerModule } from './provisioner/modules/provisioner.module';
 import { ConnectionsModule } from './connections/connections.module';
 import { User } from './auth/entities/user.entity';
 import { Connection } from './connections/entities/connection.entity';
+import { ProjectsModule } from './projects/projects.module';
+import { Project } from './projects/entities/project.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { Connection } from './connections/entities/connection.entity';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get<string>('DATABASE_URL'),
-        entities: [User, Connection],
+        entities: [User, Connection, Project],
         synchronize: true, // Auto-create tables (for development)
       }),
     }),
@@ -34,6 +36,7 @@ import { Connection } from './connections/entities/connection.entity';
     OrchestratorModule,
     ProvisionerModule,
     ConnectionsModule,
+    ProjectsModule,
   ],
   controllers: [],
   providers: [],
