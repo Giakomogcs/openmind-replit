@@ -1,36 +1,66 @@
-import {create} from 'zustand';
+import { create } from "zustand";
+import { AppStore, ChatMessage } from "../types";
 
-interface Message {
-  text: string;
-  sender: 'user' | 'bot';
-}
-
-interface ChatState {
-  messages: Message[];
-  addMessage: (message: Message) => void;
-  uiState: {
-    sidebarCollapsed: boolean;
-  };
-  toggleSidebar: () => void;
-  loadChatHistory: () => void;
-}
-
-export const useAppStore = create<ChatState>((set) => ({
+export const useAppStore = create<AppStore>((set) => ({
   messages: [],
-  addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
+  currentPage: null,
+  dynamicPages: [],
+  mcpSession: null,
   uiState: {
+    footerChatOpen: false,
     sidebarCollapsed: false,
+    currentView: "canvas",
   },
+
+  addMessage: (message) =>
+    set((state) => ({
+      messages: [
+        ...state.messages,
+        { ...message, id: Date.now().toString(), timestamp: new Date() },
+      ],
+    })),
+  setCurrentPage: (schema) => set({ currentPage: schema }),
+  addDynamicPage: (page) =>
+    set((state) => ({
+      dynamicPages: [
+        ...state.dynamicPages,
+        { ...page, id: Date.now().toString(), createdAt: new Date() },
+      ],
+    })),
+  removeDynamicPage: (id) =>
+    set((state) => ({
+      dynamicPages: state.dynamicPages.filter((p) => p.id !== id),
+    })),
+  toggleFooterChat: () =>
+    set((state) => ({
+      uiState: {
+        ...state.uiState,
+        footerChatOpen: !state.uiState.footerChatOpen,
+      },
+    })),
   toggleSidebar: () =>
     set((state) => ({
-      uiState: { ...state.uiState, sidebarCollapsed: !state.uiState.sidebarCollapsed },
+      uiState: {
+        ...state.uiState,
+        sidebarCollapsed: !state.uiState.sidebarCollapsed,
+      },
     })),
+  setUIState: (uiState) =>
+    set((state) => ({
+      uiState: { ...state.uiState, ...uiState },
+    })),
+  clearMessages: () => set({ messages: [] }),
   loadChatHistory: () => {
     // In a real app, you'd fetch this from an API
-    console.log('Loading chat history...');
+    console.log("Loading chat history...");
     // For now, we'll just add a welcome message.
-    const history: Message[] = [
-      { text: 'Welcome back!', sender: 'bot' },
+    const history: ChatMessage[] = [
+      {
+        id: "1",
+        role: "assistant",
+        content: "Welcome back!",
+        timestamp: new Date(),
+      },
     ];
     set({ messages: history });
   },
