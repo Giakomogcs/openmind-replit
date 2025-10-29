@@ -9,6 +9,6 @@ test('renders dashboard header', () => {
       <App />
     </BrowserRouter>
   );
-  const headerElement = screen.getByText(/Welcome/i);
+  const headerElement = screen.getByText(/Área de Trabalho/i);
   expect(headerElement).toBeInTheDocument();
 });

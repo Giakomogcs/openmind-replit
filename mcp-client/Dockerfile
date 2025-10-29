@@ -18,6 +18,9 @@ FROM nginx:stable-alpine
 # Copy the build output from the builder stage
 COPY --from=builder /app/mcp-client/build /usr/share/nginx/html
 
+# Copy the custom Nginx configuration
+COPY mcp-client/nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose port 80 for Nginx
 EXPOSE 80
 

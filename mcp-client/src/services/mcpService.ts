@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { ComponentSchema } from '../types';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
-
 export interface MCPResponse {
   message: string;
   componentSchema?: ComponentSchema;
@@ -16,9 +14,10 @@ export interface MCPResponse {
 
 class MCPService {
   async sendMessage(message: string): Promise<MCPResponse> {
-    const response = await axios.post(`${API_URL}/orchestrate`, {
+    const response = await axios.post(`/api/orchestrate`, {
       message,
       timestamp: new Date().toISOString(),
+      projectId: 1, // Hardcoded for now
     });
     return response.data;
   }

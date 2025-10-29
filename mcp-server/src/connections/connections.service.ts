@@ -5,16 +5,20 @@ import { Connection, AdapterType } from './entities/connection.entity';
 import { CreateConnectionDto } from './dto/create-connection.dto';
 import { OrchestratorService } from '../orchestrator/orchestrator.service';
 import * as crypto from 'crypto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConnectionsService {
-  private readonly encryptionKey = 'your-secret-key'; // In a real app, use a secure key management system
+  private readonly encryptionKey: string;
 
   constructor(
     @InjectRepository(Connection)
     private connectionsRepository: Repository<Connection>,
     private readonly orchestratorService: OrchestratorService,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+  }
 
   private encrypt(text: string): string {
     const iv = crypto.randomBytes(16);

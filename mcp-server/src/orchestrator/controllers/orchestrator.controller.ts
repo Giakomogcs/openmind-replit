@@ -1,10 +1,15 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
+import { OrchestratorService } from '../services/orchestrator.service';
 
 @Controller('orchestrate')
 export class OrchestratorController {
+  constructor(private readonly orchestratorService: OrchestratorService) {}
+
   @Post()
-  orchestrate() {
-    // Placeholder for LLM Agent logic
-    return { message: 'Orchestration complete' };
+  async orchestrate(
+    @Body('message') message: string,
+    @Body('projectId') projectId: number,
+  ) {
+    return this.orchestratorService.processMessage(message, projectId);
   }
 }
