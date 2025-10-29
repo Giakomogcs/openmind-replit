@@ -1,6 +1,8 @@
-import React from 'react';
-import { ComponentSchema } from '../../types';
-import './GridComponent.css';
+import React from "react";
+import { ComponentSchema } from "../../types";
+import { DynamicRenderer } from "./DynamicRenderer";
+// @ts-ignore
+import "./GridComponent.css";
 
 interface GridComponentProps {
   children?: ComponentSchema[];
@@ -15,12 +17,8 @@ export const GridComponent: React.FC<GridComponentProps> = ({
   gap = 20,
   responsive = true,
 }) => {
-  const DynamicRenderer = React.lazy(() =>
-    import('./DynamicRenderer').then((module) => ({ default: module.DynamicRenderer }))
-  );
-
   const gridStyle: React.CSSProperties = {
-    display: 'grid',
+    display: "grid",
     gridTemplateColumns: responsive
       ? `repeat(auto-fit, minmax(300px, 1fr))`
       : `repeat(${columns}, 1fr)`,
@@ -31,9 +29,7 @@ export const GridComponent: React.FC<GridComponentProps> = ({
     <div className="grid-component" style={gridStyle}>
       {children.map((child, index) => (
         <div key={child.id || index} className="grid-item">
-          <React.Suspense fallback={<div>...</div>}>
-            <DynamicRenderer schema={child} />
-          </React.Suspense>
+          <DynamicRenderer schema={child} />
         </div>
       ))}
     </div>
