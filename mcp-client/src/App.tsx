@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Home, Database, Folder, Menu, X } from 'lucide-react';
+import { Home, Database, Folder, Menu, X, Share2 } from 'lucide-react';
 import './App.css';
 import Canvas from './components/Canvas';
 import Connections from './components/Connections';
 import Collections from './components/Collections';
+import SchemaViewer from './components/SchemaViewer/SchemaViewer';
 import FooterChat from './components/FooterChat';
 import { useAppStore } from './store';
 
@@ -52,6 +53,14 @@ function App() {
             <Folder size={20} />
             {!uiState.sidebarCollapsed && <span>Collections</span>}
           </Link>
+          <Link
+            to="/projects/1/schema"
+            className={`nav-item ${isActive('/projects/1/schema') ? 'active' : ''}`}
+            title="Schema Viewer"
+          >
+            <Share2 size={20} />
+            {!uiState.sidebarCollapsed && <span>Schema Viewer</span>}
+          </Link>
         </nav>
       </aside>
 
@@ -61,6 +70,7 @@ function App() {
             <Route path="/" element={<Canvas />} />
             <Route path="/connections" element={<Connections />} />
             <Route path="/collections" element={<Collections />} />
+            <Route path="/projects/:projectId/schema" element={<SchemaViewer />} />
           </Routes>
         </div>
       </main>

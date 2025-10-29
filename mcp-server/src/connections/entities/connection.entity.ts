@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from '../../auth/entities/user.entity';
+import { Project } from '../../projects/entities/project.entity';
 
 export enum ConnectionStatus {
   DIAGNOSING = 'DIAGNOSING',
@@ -42,6 +43,9 @@ export class Connection {
   @Column({ nullable: true })
   adapterUrl: string;
 
+  @Column({ nullable: true })
+  documentationUrl: string;
+
   @Column()
   encryptedCredentials: string;
 
@@ -50,4 +54,7 @@ export class Connection {
 
   @Column({ type: 'jsonb', nullable: true })
   finalSpecification: any;
+
+  @ManyToOne(() => Project, project => project.connections)
+  project: Project;
 }

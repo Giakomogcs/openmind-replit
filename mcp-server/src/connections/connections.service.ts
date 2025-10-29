@@ -26,11 +26,15 @@ export class ConnectionsService {
 
   private decrypt(text: string): string {
     const textParts = text.split(':');
-    const iv = Buffer.from(textParts.shift(), 'hex');
+    const ivHex = textParts.shift();
+    if (!ivHex) {
+        throw new Error('Invalid encrypted text format');
+    }
+    const iv = Buffer.from(ivHex, 'hex');
     const encryptedText = Buffer.from(textParts.join(':'), 'hex');
     const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(this.encryptionKey), iv);
     let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
+decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
   }
 
@@ -47,6 +51,7 @@ export class ConnectionsService {
 
     const savedConnection = await this.connectionsRepository.save(connection);
 
+    // @ts-ignore
     this.orchestratorService.startDiagnostic(savedConnection.id);
 
     return savedConnection;

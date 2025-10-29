@@ -4,7 +4,7 @@ import { AppStore, ChatMessage, ComponentSchema, DynamicPage, UIState } from '..
 
 export const useAppStore = create<AppStore>()(
   persist(
-    (set, get) => ({
+    (set: (fn: (state: AppStore) => Partial<AppStore>) => void, get: () => AppStore) => ({
       messages: [],
       currentPage: null,
       dynamicPages: [],
@@ -15,14 +15,14 @@ export const useAppStore = create<AppStore>()(
         currentView: 'canvas',
       },
 
-      addMessage: (message) => {
+      addMessage: (message: Partial<ChatMessage>) => {
         const newMessage: ChatMessage = {
           ...message,
           id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           timestamp: new Date(),
-        };
+        } as ChatMessage;
         
-        set((state) => ({
+        set((state: AppStore) => ({
           messages: [...state.messages, newMessage],
         }));
 
@@ -32,30 +32,30 @@ export const useAppStore = create<AppStore>()(
 
       },
 
-      setCurrentPage: (schema) => {
-        set({ currentPage: schema });
+      setCurrentPage: (schema: ComponentSchema | null) => {
+        set(() => ({ currentPage: schema }));
       },
 
-      addDynamicPage: (page) => {
+      addDynamicPage: (page: Omit<DynamicPage, 'id' | 'createdAt'>) => {
         const newPage: DynamicPage = {
           ...page,
           id: `page-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           createdAt: new Date(),
         };
         
-        set((state) => ({
+        set((state: AppStore) => ({
           dynamicPages: [...state.dynamicPages, newPage],
         }));
       },
 
-      removeDynamicPage: (id) => {
-        set((state) => ({
+      removeDynamicPage: (id: string) => {
+        set((state: AppStore) => ({
           dynamicPages: state.dynamicPages.filter((p) => p.id !== id),
         }));
       },
 
       toggleFooterChat: () => {
-        set((state) => ({
+        set((state: AppStore) => ({
           uiState: {
             ...state.uiState,
             footerChatOpen: !state.uiState.footerChatOpen,
@@ -64,7 +64,7 @@ export const useAppStore = create<AppStore>()(
       },
 
       toggleSidebar: () => {
-        set((state) => ({
+        set((state: AppStore) => ({
           uiState: {
             ...state.uiState,
             sidebarCollapsed: !state.uiState.sidebarCollapsed,
@@ -72,8 +72,8 @@ export const useAppStore = create<AppStore>()(
         }));
       },
 
-      setUIState: (newState) => {
-        set((state) => ({
+      setUIState: (newState: Partial<UIState>) => {
+        set((state: AppStore) => ({
           uiState: {
             ...state.uiState,
             ...newState,
@@ -82,7 +82,7 @@ export const useAppStore = create<AppStore>()(
       },
 
       clearMessages: () => {
-        set({ messages: [], currentPage: null });
+        set(() => ({ messages: [], currentPage: null }));
       },
 
       loadChatHistory: () => {
@@ -93,14 +93,14 @@ export const useAppStore = create<AppStore>()(
             .find((m) => m.componentSchema);
           
           if (lastMessageWithSchema && lastMessageWithSchema.componentSchema) {
-            set({ currentPage: lastMessageWithSchema.componentSchema });
+            set(() => ({ currentPage: lastMessageWithSchema.componentSchema }));
           }
         }
       },
     }),
     {
       name: 'mcp-app-storage',
-      partialize: (state) => ({
+      partialize: (state: AppStore) => ({
         messages: state.messages,
         currentPage: state.currentPage,
         dynamicPages: state.dynamicPages,
