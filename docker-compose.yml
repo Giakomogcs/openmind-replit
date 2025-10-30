@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:13
+    container_name: mcp-postgres
     restart: always
     environment:
       POSTGRES_USER: user
@@ -15,11 +16,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - mcp-network
 
   server:
     build:
       context: .
       dockerfile: mcp-server/Dockerfile
+    container_name: mcp-server
     ports:
       - "3000:3000"
     env_file:
@@ -28,16 +32,25 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - mcp-network
 
   client:
     build:
       context: .
       dockerfile: mcp-client/Dockerfile
+    container_name: mcp-client
     ports:
       - "3001:80"
     restart: unless-stopped
     depends_on:
       - server
+    networks:
+      - mcp-network
 
 volumes:
   postgres_data:
+
+networks:
+  mcp-network:
+    driver: bridge
