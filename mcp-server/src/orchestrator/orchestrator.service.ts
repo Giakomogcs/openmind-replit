@@ -103,21 +103,33 @@ export class OrchestratorService {
       JSON OpenAPI 3.0 Specification:
     `;
 
-    try {
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = await response.text();
-      // Clean up the response to ensure it's valid JSON
-      const jsonText = text
-        .replace(/```json/g, '')
-        .replace(/```/g, '')
-        .trim();
-      return JSON.parse(jsonText);
-    } catch (error) {
-      this.logger.error('Error generating schema from LLM', error);
-      throw new Error(
-        'Failed to generate schema from documentation using LLM.',
-      );
+    const maxRetries = 3;
+    let lastError: Error | null = null;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = await response.text();
+        // Clean up the response to ensure it's valid JSON
+        const jsonText = text
+          .replace(/```json/g, '')
+          .replace(/```/g, '')
+          .trim();
+        return JSON.parse(jsonText);
+      } catch (error) {
+        lastError = error;
+        this.logger.warn(
+          `Attempt ${attempt + 1} failed. Retrying in ${Math.pow(2, attempt)}s...`,
+        );
+        // wait for 1s, 2s, 4s
+        await new Promise((resolve) => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
     }
+
+    this.logger.error('Error generating schema from LLM after multiple retries', lastError);
+    throw new Error(
+      'Failed to generate schema from documentation using LLM.',
+    );
   }
 }

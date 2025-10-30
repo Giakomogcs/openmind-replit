@@ -40,12 +40,19 @@ export interface UIState {
   currentView: 'canvas' | 'split' | 'fullscreen';
 }
 
+export interface Project {
+  id: number;
+  name: string;
+}
+
 export interface AppStore {
   messages: ChatMessage[];
   currentPage: ComponentSchema | null;
   dynamicPages: DynamicPage[];
   mcpSession: MCPSession | null;
   uiState: UIState;
+  projects: Project[];
+  activeProjectId: number | null;
   
   addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   setCurrentPage: (schema: ComponentSchema | null) => void;
@@ -56,4 +63,7 @@ export interface AppStore {
   setUIState: (state: Partial<UIState>) => void;
   clearMessages: () => void;
   loadChatHistory: () => void;
+  loadProjects: () => Promise<void>;
+  createProject: (name: string) => Promise<Project>;
+  setActiveProject: (projectId: number | null) => void;
 }

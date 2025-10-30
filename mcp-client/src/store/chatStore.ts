@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import { AppStore, ChatMessage } from "../types";
+import { AppStore, ChatMessage, Project } from "../types";
+import api from "../services/api";
 
-export const useAppStore = create<AppStore>((set) => ({
+export const useAppStore = create<AppStore>((set, get) => ({
   messages: [],
   currentPage: null,
   dynamicPages: [],
@@ -11,6 +12,8 @@ export const useAppStore = create<AppStore>((set) => ({
     sidebarCollapsed: false,
     currentView: "canvas",
   },
+  projects: [],
+  activeProjectId: null,
 
   addMessage: (message) =>
     set((state) => ({
@@ -51,8 +54,10 @@ export const useAppStore = create<AppStore>((set) => ({
     })),
   clearMessages: () => set({ messages: [] }),
   loadChatHistory: () => {
+    const activeProjectId = get().activeProjectId;
+    if (!activeProjectId) return;
     // In a real app, you'd fetch this from an API
-    console.log("Loading chat history...");
+    console.log(`Loading chat history for project ${activeProjectId}...`);
     // For now, we'll just add a welcome message.
     const history: ChatMessage[] = [
       {
@@ -63,5 +68,34 @@ export const useAppStore = create<AppStore>((set) => ({
       },
     ];
     set({ messages: history });
+  },
+  loadProjects: async () => {
+    try {
+      const projects = await api.get('/projects');
+      set({ projects: projects.data });
+    } catch (error) {
+      console.error('Failed to load projects', error);
+    }
+  },
+  createProject: async (name: string) => {
+    try {
+      const newProject = await api.post('/projects', { name });
+      set((state) => ({
+        projects: [...state.projects, newProject.data],
+      }));
+      return newProject.data;
+    } catch (error) {
+      console.error('Failed to create project', error);
+      throw error;
+    }
+  },
+  setActiveProject: (projectId: number | null) => {
+    localStorage.setItem('activeProjectId', projectId ? projectId.toString() : '');
+    set({ activeProjectId: projectId });
+    if (projectId) {
+      get().loadChatHistory();
+    } else {
+      set({ messages: [] });
+    }
   },
 }));
