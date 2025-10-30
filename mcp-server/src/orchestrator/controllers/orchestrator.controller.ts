@@ -1,7 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { OrchestratorService } from '../services/orchestrator.service';
 
-@Controller('orchestrate')
+@Controller('api/orchestrate')
 export class OrchestratorController {
   constructor(private readonly orchestratorService: OrchestratorService) {}
 

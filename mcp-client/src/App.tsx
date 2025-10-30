@@ -15,6 +15,7 @@ import Collections from "./components/Collections";
 import SchemaViewer from "./components/SchemaViewer/SchemaViewer";
 import FooterChat from "./components/FooterChat";
 import ProjectHub from "./components/ProjectHub";
+import LoginPage from "./components/LoginPage";
 import { useAppStore } from "./store";
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
       <main className="main-content">
         <div className="content-area">
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/projects" element={<ProjectHub />} />
             {activeProjectId && (
               <>

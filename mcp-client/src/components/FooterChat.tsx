@@ -1,14 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { MessageCircle, X, Send, Loader, Trash2, LogOut } from "lucide-react";
 import { useAppStore } from "../store";
 import { mcpService } from "../services/mcpService";
 // @ts-ignore
 import "./FooterChat.css";
 
 const FooterChat: React.FC = () => {
-  const { messages, uiState, addMessage, toggleFooterChat, clearMessages } =
-    useAppStore();
-
+  const {
+    messages,
+    uiState,
+    addMessage,
+    toggleFooterChat,
+    clearMessages,
+    setActiveProject,
+  } = useAppStore();
+  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -26,18 +33,29 @@ const FooterChat: React.FC = () => {
     if (uiState.footerChatOpen && inputRef.current) {
       inputRef.current.focus();
     }
+    if (uiState.footerChatOpen && messages.length === 0 && !isLoading) {
+      handleSendMessage("__INITIAL_MESSAGE__");
+    }
   }, [uiState.footerChatOpen]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      setActiveProject(null);
+      navigate("/login");
+    }
+  };
 
-    const userMessage = inputValue.trim();
-    setInputValue("");
+  const handleSendMessage = async (message?: string) => {
+    const userMessage = message || inputValue.trim();
+    if (!userMessage || isLoading) return;
 
-    addMessage({
-      role: "user",
-      content: userMessage,
-    });
+    if (!message) {
+      setInputValue("");
+      addMessage({
+        role: "user",
+        content: userMessage,
+      });
+    }
 
     setIsLoading(true);
 
@@ -95,6 +113,18 @@ const FooterChat: React.FC = () => {
           )}
         </div>
         <div className="header-actions">
+          {uiState.footerChatOpen && (
+            <button
+              className="logout-button"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                handleLogout();
+              }}
+              title="Logout"
+            >
+              <LogOut size={16} />
+            </button>
+          )}
           {uiState.footerChatOpen && messages.length > 0 && (
             <button
               className="clear-button"

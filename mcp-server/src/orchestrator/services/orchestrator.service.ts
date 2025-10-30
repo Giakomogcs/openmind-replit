@@ -70,10 +70,24 @@ export class OrchestratorService {
         throw new Error(`Project with id ${projectId} not found`);
       }
 
+      if (message === '__INITIAL_MESSAGE__') {
+        if (project.connections.length > 0) {
+          return {
+            message:
+              'Welcome back! I see you have some connections set up. What would you like to build today?',
+          };
+        } else {
+          return {
+            message:
+              "Welcome! It looks like you don't have any connections set up yet. Head over to the connections page to get started.",
+          };
+        }
+      }
+
       const context = project.connections
         .map((c) => JSON.stringify(c.draftSpecification))
         .join('\n');
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
       const result = await model.generateContent(`${context}\n\n${message}`);
       const response = await result.response;
       const text = response.text();

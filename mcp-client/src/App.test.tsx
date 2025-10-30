@@ -14,6 +14,12 @@ test('renders dashboard header', () => {
       sidebarCollapsed: false,
     },
     messages: [],
+    projects: [],
+    activeProject: null,
+    activeProjectId: null,
+    setActiveProject: jest.fn(),
+    loadProjects: jest.fn(),
+    createProject: jest.fn(),
     toggleSidebar: jest.fn(),
     loadChatHistory: jest.fn(),
   });
@@ -23,6 +29,6 @@ test('renders dashboard header', () => {
       <App />
     </BrowserRouter>
   );
-  const headerElement = screen.getByText(/Área de Trabalho/i);
+  const headerElement = screen.getByText(/Project Hub/i);
   expect(headerElement).toBeInTheDocument();
 });
