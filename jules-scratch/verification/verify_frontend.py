@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-
 import time
 
 def run(playwright):
@@ -8,22 +7,25 @@ def run(playwright):
     page = context.new_page()
 
     # Wait for the dev server to start
-    time.sleep(15)
+    time.sleep(30)
 
     # Navigate to the project hub
-    page.goto("http://localhost:3000/projects")
+    page.goto("http://localhost:3001/projects")
 
     # Create a new project
     page.get_by_placeholder("Enter project name").fill("Test Project")
     page.get_by_role("button", name="Create Project").click()
 
-    # Go to the project hub and take a screenshot
-    page.goto("http://localhost:3000/projects")
+    # Go to the project hub, click the new project, and take a screenshot
+    page.goto("http://localhost:3001/projects")
+    page.wait_for_selector("text=Test Project")
+    page.get_by_text("Test Project").click()
     page.screenshot(path="jules-scratch/verification/project-hub.png")
 
-    # Navigate to the login page and take a screenshot
-    page.goto("http://localhost:3000/login")
-    page.screenshot(path="jules-scratch/verification/login-page.png")
+    # Navigate to the connections page and take a screenshot of the modal
+    page.goto("http://localhost:3001/connections")
+    page.get_by_role("button", name="Nova Conexão").click()
+    page.screenshot(path="jules-scratch/verification/connections-modal.png")
 
     # ---------------------
     context.close()

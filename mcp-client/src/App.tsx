@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { Home, Database, Folder, Menu, X, Share2 } from "lucide-react";
+import { Home, Database, Folder, Menu, X, Share2, LogOut } from "lucide-react";
 // @ts-ignore
 import "./App.css";
 import Canvas from "./components/Canvas";
@@ -15,7 +15,6 @@ import Collections from "./components/Collections";
 import SchemaViewer from "./components/SchemaViewer/SchemaViewer";
 import FooterChat from "./components/FooterChat";
 import ProjectHub from "./components/ProjectHub";
-import LoginPage from "./components/LoginPage";
 import { useAppStore } from "./store";
 
 function App() {
@@ -35,7 +34,16 @@ function App() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  if (!activeProjectId && location.pathname !== "/projects") {
+  const handleLogout = () => {
+    setActiveProject(null);
+    navigate("/projects");
+  };
+
+  if (
+    !activeProjectId &&
+    location.pathname !== "/projects" &&
+    location.pathname !== "/login"
+  ) {
     return null; // Render nothing while redirecting
   }
 
@@ -78,20 +86,27 @@ function App() {
             </Link>
             <Link
               to={`/projects/${activeProjectId}/schema`}
-              className={`nav-item ${isActive(`/projects/${activeProjectId}/schema`) ? "active" : ""}`}
+              className={`nav-item ${
+                isActive(`/projects/${activeProjectId}/schema`) ? "active" : ""
+              }`}
               title="Schema Viewer"
             >
               <Share2 size={20} />
               {!uiState.sidebarCollapsed && <span>Schema Viewer</span>}
             </Link>
           </nav>
+          <div className="sidebar-footer">
+            <button className="nav-item logout-btn" onClick={handleLogout}>
+              <LogOut size={20} />
+              {!uiState.sidebarCollapsed && <span>Sair</span>}
+            </button>
+          </div>
         </aside>
       )}
 
       <main className="main-content">
         <div className="content-area">
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
             <Route path="/projects" element={<ProjectHub />} />
             {activeProjectId && (
               <>

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { MessageCircle, X, Send, Loader, Trash2, LogOut } from "lucide-react";
+import { MessageCircle, X, Send, Loader, Trash2 } from "lucide-react";
 import { useAppStore } from "../store";
 import { mcpService } from "../services/mcpService";
 // @ts-ignore
@@ -13,9 +12,7 @@ const FooterChat: React.FC = () => {
     addMessage,
     toggleFooterChat,
     clearMessages,
-    setActiveProject,
   } = useAppStore();
-  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -37,13 +34,6 @@ const FooterChat: React.FC = () => {
       handleSendMessage("__INITIAL_MESSAGE__");
     }
   }, [uiState.footerChatOpen]);
-
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to log out?")) {
-      setActiveProject(null);
-      navigate("/login");
-    }
-  };
 
   const handleSendMessage = async (message?: string) => {
     const userMessage = message || inputValue.trim();
@@ -113,18 +103,6 @@ const FooterChat: React.FC = () => {
           )}
         </div>
         <div className="header-actions">
-          {uiState.footerChatOpen && (
-            <button
-              className="logout-button"
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                e.stopPropagation();
-                handleLogout();
-              }}
-              title="Logout"
-            >
-              <LogOut size={16} />
-            </button>
-          )}
           {uiState.footerChatOpen && messages.length > 0 && (
             <button
               className="clear-button"
