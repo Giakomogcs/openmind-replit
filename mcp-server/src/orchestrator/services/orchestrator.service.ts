@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Connection, ConnectionStatus } from '../../connections/entities/connection.entity';
+import {
+  Connection,
+  ConnectionStatus,
+} from '../../connections/entities/connection.entity';
 import { Project } from '../../projects/entities/project.entity';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import OpenAPIParser from '@readme/openapi-parser';
@@ -16,7 +19,7 @@ export class OrchestratorService {
     @InjectRepository(Project)
     private projectsRepository: Repository<Project>,
   ) {
-        const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY is not set');
     }
@@ -25,7 +28,9 @@ export class OrchestratorService {
 
   async startDiagnostic(connectionId: string) {
     console.log(`Starting diagnostic for connection ${connectionId}`);
-    const connection = await this.connectionsRepository.findOne({ where: { id: connectionId } });
+    const connection = await this.connectionsRepository.findOne({
+      where: { id: connectionId },
+    });
 
     if (!connection) {
       console.error(`Connection with id ${connectionId} not found`);
@@ -35,12 +40,19 @@ export class OrchestratorService {
     try {
       const parser = new OpenAPIParser();
       const api = await parser.validate(connection.adapterUrl);
-      console.log('API name: %s, Version: %s', api.info.title, api.info.version);
+      console.log(
+        'API name: %s, Version: %s',
+        api.info.title,
+        api.info.version,
+      );
 
       connection.draftSpecification = api;
       connection.status = ConnectionStatus.PENDING_VALIDATION;
     } catch (error) {
-      console.error(`Failed to fetch or parse OpenAPI specification from ${connection.adapterUrl}`, error);
+      console.error(
+        `Failed to fetch or parse OpenAPI specification from ${connection.adapterUrl}`,
+        error,
+      );
       connection.status = ConnectionStatus.ERROR;
     }
 
@@ -59,9 +71,9 @@ export class OrchestratorService {
       }
 
       const context = project.connections
-        .map(c => JSON.stringify(c.draftSpecification))
+        .map((c) => JSON.stringify(c.draftSpecification))
         .join('\n');
-      const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = this.genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
       const result = await model.generateContent(`${context}\n\n${message}`);
       const response = await result.response;
       const text = response.text();

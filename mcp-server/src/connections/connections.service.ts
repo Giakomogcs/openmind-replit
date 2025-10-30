@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConnectionsService {
-  private readonly encryptionKey: string;
+  private readonly encryptionKey: Buffer;
 
   constructor(
     @InjectRepository(Connection)
@@ -17,16 +17,23 @@ export class ConnectionsService {
     private readonly orchestratorService: OrchestratorService,
     private readonly configService: ConfigService,
   ) {
-        const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+    const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
     if (!encryptionKey) {
       throw new Error('ENCRYPTION_KEY is not set');
     }
-    this.encryptionKey = encryptionKey;
+    this.encryptionKey = crypto
+      .createHash('sha256')
+      .update(encryptionKey)
+      .digest();
   }
 
   private encrypt(text: string): string {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(this.encryptionKey), iv);
+    const cipher = crypto.createCipheriv(
+      'aes-256-cbc',
+      this.encryptionKey,
+      iv,
+    );
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
     return iv.toString('hex') + ':' + encrypted.toString('hex');
@@ -36,13 +43,17 @@ export class ConnectionsService {
     const textParts = text.split(':');
     const ivHex = textParts.shift();
     if (!ivHex) {
-        throw new Error('Invalid encrypted text format');
+      throw new Error('Invalid encrypted text format');
     }
     const iv = Buffer.from(ivHex, 'hex');
     const encryptedText = Buffer.from(textParts.join(':'), 'hex');
-    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(this.encryptionKey), iv);
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      this.encryptionKey,
+      iv,
+    );
     let decrypted = decipher.update(encryptedText);
-decrypted = Buffer.concat([decrypted, decipher.final()]);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
   }
 
