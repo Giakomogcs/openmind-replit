@@ -71,26 +71,29 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
   loadProjects: async () => {
     try {
-      const projects = await api.get('/projects');
+      const projects = await api.get("/projects");
       set({ projects: projects.data });
     } catch (error) {
-      console.error('Failed to load projects', error);
+      console.error("Failed to load projects", error);
     }
   },
   createProject: async (name: string) => {
     try {
-      const newProject = await api.post('/projects', { name });
+      const newProject = await api.post("/projects", { name });
       set((state) => ({
         projects: [...state.projects, newProject.data],
       }));
       return newProject.data;
     } catch (error) {
-      console.error('Failed to create project', error);
+      console.error("Failed to create project", error);
       throw error;
     }
   },
   setActiveProject: (projectId: number | null) => {
-    localStorage.setItem('activeProjectId', projectId ? projectId.toString() : '');
+    localStorage.setItem(
+      "activeProjectId",
+      projectId ? projectId.toString() : ""
+    );
     set({ activeProjectId: projectId });
     if (projectId) {
       get().loadChatHistory();

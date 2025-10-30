@@ -11,12 +11,10 @@ export class ProvisionerService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const defaultProject = await this.projectRepository.findOne({ where: { id: '1' } });
+    const defaultProject = await this.projectRepository.findOne({ where: { id: 1 } });
     if (!defaultProject) {
       const newProject = this.projectRepository.create({
-        id: '1',
         name: 'Default Project',
-        description: 'A default project for new installations.',
       });
       await this.projectRepository.save(newProject);
       console.log('Default project created.');

@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { Home, Database, Folder, Menu, X, Share2 } from "lucide-react";
 // @ts-ignore
 import "./App.css";
@@ -14,20 +20,21 @@ import { useAppStore } from "./store";
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { uiState, toggleSidebar, activeProjectId, setActiveProject } = useAppStore();
+  const { uiState, toggleSidebar, activeProjectId, setActiveProject } =
+    useAppStore();
 
   useEffect(() => {
-    const savedProjectId = localStorage.getItem('activeProjectId');
+    const savedProjectId = localStorage.getItem("activeProjectId");
     if (savedProjectId) {
       setActiveProject(parseInt(savedProjectId, 10));
-    } else if (location.pathname !== '/projects') {
-      navigate('/projects');
+    } else if (location.pathname !== "/projects") {
+      navigate("/projects");
     }
   }, [setActiveProject, navigate, location.pathname]);
 
   const isActive = (path: string) => location.pathname === path;
 
-  if (!activeProjectId && location.pathname !== '/projects') {
+  if (!activeProjectId && location.pathname !== "/projects") {
     return null; // Render nothing while redirecting
   }
 

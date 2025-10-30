@@ -123,13 +123,16 @@ export class OrchestratorService {
           `Attempt ${attempt + 1} failed. Retrying in ${Math.pow(2, attempt)}s...`,
         );
         // wait for 1s, 2s, 4s
-        await new Promise((resolve) => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.pow(2, attempt) * 1000),
+        );
       }
     }
 
-    this.logger.error('Error generating schema from LLM after multiple retries', lastError);
-    throw new Error(
-      'Failed to generate schema from documentation using LLM.',
+    this.logger.error(
+      'Error generating schema from LLM after multiple retries',
+      lastError,
     );
+    throw new Error('Failed to generate schema from documentation using LLM.');
   }
 }

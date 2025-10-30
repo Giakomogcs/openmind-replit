@@ -1,13 +1,22 @@
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp: Date;
   componentSchema?: ComponentSchema;
 }
 
 export interface ComponentSchema {
-  type: 'text' | 'form' | 'table' | 'chart' | 'grid' | 'tabs' | 'card' | 'list' | 'custom';
+  type:
+    | "text"
+    | "form"
+    | "table"
+    | "chart"
+    | "grid"
+    | "tabs"
+    | "card"
+    | "list"
+    | "custom";
   id: string;
   props?: Record<string, any>;
   children?: ComponentSchema[];
@@ -37,7 +46,7 @@ export interface MCPSession {
 export interface UIState {
   footerChatOpen: boolean;
   sidebarCollapsed: boolean;
-  currentView: 'canvas' | 'split' | 'fullscreen';
+  currentView: "canvas" | "split" | "fullscreen";
 }
 
 export interface Project {
@@ -53,10 +62,10 @@ export interface AppStore {
   uiState: UIState;
   projects: Project[];
   activeProjectId: number | null;
-  
-  addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
+
+  addMessage: (message: Omit<ChatMessage, "id" | "timestamp">) => void;
   setCurrentPage: (schema: ComponentSchema | null) => void;
-  addDynamicPage: (page: Omit<DynamicPage, 'id' | 'createdAt'>) => void;
+  addDynamicPage: (page: Omit<DynamicPage, "id" | "createdAt">) => void;
   removeDynamicPage: (id: string) => void;
   toggleFooterChat: () => void;
   toggleSidebar: () => void;
