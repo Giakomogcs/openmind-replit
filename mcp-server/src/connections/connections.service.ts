@@ -60,17 +60,23 @@ export class ConnectionsService {
   async create(createConnectionDto: CreateConnectionDto): Promise<Connection> {
     const connection = new Connection();
     connection.nomeAmigavel = createConnectionDto.nomeAmigavel;
-    connection.adapterType = AdapterType.REST;
-    connection.adapterUrl = createConnectionDto.adapterUrl;
+    connection.adapterType = createConnectionDto.connectionType;
+
+    if (createConnectionDto.connectionType === AdapterType.REST) {
+      connection.adapterUrl = createConnectionDto.adapterUrl;
+    } else {
+      connection.host = createConnectionDto.host;
+      connection.port = createConnectionDto.port;
+      connection.databaseName = createConnectionDto.databaseName;
+    }
 
     if (createConnectionDto.credentials) {
-      const credentialsString = JSON.stringify(createConnectionDto.credentials);
-      connection.encryptedCredentials = this.encrypt(credentialsString);
+      connection.credentials = createConnectionDto.credentials;
     }
 
     const savedConnection = await this.connectionsRepository.save(connection);
 
-    // @ts-ignore
+    // Dispara o diagnóstico em segundo plano, sem esperar pela conclusão.
     this.orchestratorService.startDiagnostic(savedConnection.id);
 
     return savedConnection;

@@ -13,7 +13,8 @@ const ProjectHub = () => {
     loadProjects();
   }, [loadProjects]);
 
-  const handleCreateProject = async () => {
+  const handleCreateProject = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (newProjectName.trim() && !isLoading) {
       setIsLoading(true);
       try {
@@ -22,6 +23,7 @@ const ProjectHub = () => {
         navigate("/");
       } catch (error) {
         alert("Failed to create project. Please try again.");
+      } finally {
         setIsLoading(false);
       }
     }
@@ -34,31 +36,42 @@ const ProjectHub = () => {
 
   return (
     <div className="project-hub">
-      <h1>Project Hub</h1>
-      <div className="create-project">
-        <h2>Create a new project</h2>
-        <input
-          type="text"
-          value={newProjectName}
-          onChange={(e) => setNewProjectName(e.target.value)}
-          placeholder="Enter project name"
-        />
-        <button onClick={handleCreateProject} disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create Project"}
-        </button>
+      <div className="project-hub-header">
+        <div className="project-hub-header-content">
+          <h1>Project Hub</h1>
+        </div>
       </div>
-      <div className="project-list">
-        <h2>Select an existing project</h2>
-        <ul>
-          {projects.map((project) => (
-            <li
-              key={project.id}
-              onClick={() => handleSelectProject(project.id)}
-            >
-              {project.name}
-            </li>
-          ))}
-        </ul>
+      <div className="project-hub-content">
+        <div className="create-project">
+          <h2>Create a new project</h2>
+          <form
+            onSubmit={handleCreateProject}
+            className="create-project-form"
+          >
+            <input
+              type="text"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              placeholder="Enter project name"
+            />
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Creating..." : "Create Project"}
+            </button>
+          </form>
+        </div>
+        <div className="project-list">
+          <h2>Select an existing project</h2>
+          <ul>
+            {projects.map((project) => (
+              <li
+                key={project.id}
+                onClick={() => handleSelectProject(project.id)}
+              >
+                {project.name}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

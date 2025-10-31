@@ -6,9 +6,13 @@ import { mcpService } from "../services/mcpService";
 import "./FooterChat.css";
 
 const FooterChat: React.FC = () => {
-  const { messages, uiState, addMessage, toggleFooterChat, clearMessages } =
-    useAppStore();
-
+  const {
+    messages,
+    uiState,
+    addMessage,
+    toggleFooterChat,
+    clearMessages,
+  } = useAppStore();
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -26,18 +30,22 @@ const FooterChat: React.FC = () => {
     if (uiState.footerChatOpen && inputRef.current) {
       inputRef.current.focus();
     }
+    if (uiState.footerChatOpen && messages.length === 0 && !isLoading) {
+      handleSendMessage("__INITIAL_MESSAGE__");
+    }
   }, [uiState.footerChatOpen]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const handleSendMessage = async (message?: string) => {
+    const userMessage = message || inputValue.trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = inputValue.trim();
-    setInputValue("");
-
-    addMessage({
-      role: "user",
-      content: userMessage,
-    });
+    if (!message) {
+      setInputValue("");
+      addMessage({
+        role: "user",
+        content: userMessage,
+      });
+    }
 
     setIsLoading(true);
 

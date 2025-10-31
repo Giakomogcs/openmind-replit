@@ -4,10 +4,16 @@ import './Connections.css';
 
 const Connections: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [connectionType, setConnectionType] = useState<'api' | 'database'>(
+    'api'
+  );
   const [nomeAmigavel, setNomeAmigavel] = useState('');
   const [adapterUrl, setAdapterUrl] = useState('');
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
+  const [host, setHost] = useState('');
+  const [port, setPort] = useState('');
+  const [databaseName, setDatabaseName] = useState('');
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
@@ -17,18 +23,35 @@ const Connections: React.FC = () => {
     setAdapterUrl('');
     setUser('');
     setPassword('');
+    setHost('');
+    setPort('');
+    setDatabaseName('');
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const connectionData = {
-      nomeAmigavel,
-      adapterUrl,
-      credentials: {
-        user,
-        password,
-      },
-    };
+    const connectionData =
+      connectionType === 'api'
+        ? {
+            connectionType,
+            nomeAmigavel,
+            adapterUrl,
+            credentials: {
+              user,
+              password,
+            },
+          }
+        : {
+            connectionType,
+            nomeAmigavel,
+            host,
+            port,
+            databaseName,
+            credentials: {
+              user,
+              password,
+            },
+          };
 
     try {
       const response = await fetch('/api/connections', {
@@ -72,8 +95,8 @@ const Connections: React.FC = () => {
         <Database size={64} />
         <h3>Nenhuma conexão configurada</h3>
         <p>
-          Adicione conexões com APIs RESTful ou bancos de dados PostgreSQL
-          para que o MCP Assistant possa interagir com elas.
+          Adicione conexões com APIs RESTful ou bancos de dados PostgreSQL para
+          que o MCP Assistant possa interagir com elas.
         </p>
         <button className="add-connection-btn-large" onClick={openModal}>
           <Plus size={24} />
@@ -90,40 +113,112 @@ const Connections: React.FC = () => {
                 <X size={24} />
               </button>
             </div>
+            <div className="connection-tabs">
+              <button
+                className={`tab ${connectionType === 'api' ? 'active' : ''}`}
+                onClick={() => setConnectionType('api')}
+              >
+                API
+              </button>
+              <button
+                className={`tab ${
+                  connectionType === 'database' ? 'active' : ''
+                }`}
+                onClick={() => setConnectionType('database')}
+              >
+                Database
+              </button>
+            </div>
             <form className="connection-form" onSubmit={handleSubmit}>
-              <label htmlFor="nomeAmigavel">Nome Amigável</label>
-              <input
-                type="text"
-                id="nomeAmigavel"
-                value={nomeAmigavel}
-                onChange={(e) => setNomeAmigavel(e.target.value)}
-              />
+              {connectionType === 'api' ? (
+                <>
+                  <label htmlFor="nomeAmigavel">Nome Amigável</label>
+                  <input
+                    type="text"
+                    id="nomeAmigavel"
+                    value={nomeAmigavel}
+                    onChange={(e) => setNomeAmigavel(e.target.value)}
+                  />
 
-              <label htmlFor="adapterUrl">URL da API</label>
-              <input
-                type="text"
-                id="adapterUrl"
-                value={adapterUrl}
-                onChange={(e) => setAdapterUrl(e.target.value)}
-              />
+                  <label htmlFor="adapterUrl">URL da API</label>
+                  <input
+                    type="text"
+                    id="adapterUrl"
+                    value={adapterUrl}
+                    onChange={(e) => setAdapterUrl(e.target.value)}
+                  />
 
-              <label htmlFor="user">Usuário (Opcional)</label>
-              <input
-                type="text"
-                id="user"
-                value={user}
-                onChange={(e) => setUser(e.target.value)}
-              />
+                  <label htmlFor="user">Usuário (Opcional)</label>
+                  <input
+                    type="text"
+                    id="user"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                  />
 
-              <label htmlFor="password">Senha (Opcional)</label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+                  <label htmlFor="password">Senha (Opcional)</label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </>
+              ) : (
+                <>
+                  <label htmlFor="nomeAmigavel">Nome Amigável</label>
+                  <input
+                    type="text"
+                    id="nomeAmigavel"
+                    value={nomeAmigavel}
+                    onChange={(e) => setNomeAmigavel(e.target.value)}
+                  />
 
-              <button type="submit" className="submit-btn">Criar Conexão</button>
+                  <label htmlFor="host">Host</label>
+                  <input
+                    type="text"
+                    id="host"
+                    value={host}
+                    onChange={(e) => setHost(e.target.value)}
+                  />
+
+                  <label htmlFor="port">Port</label>
+                  <input
+                    type="text"
+                    id="port"
+                    value={port}
+                    onChange={(e) => setPort(e.target.value)}
+                  />
+
+                  <label htmlFor="databaseName">Database Name</label>
+                  <input
+                    type="text"
+                    id="databaseName"
+                    value={databaseName}
+                    onChange={(e) => setDatabaseName(e.target.value)}
+                  />
+
+                  <label htmlFor="user">Usuário</label>
+                  <input
+                    type="text"
+                    id="user"
+                    value={user}
+                    onChange={(e) => setUser(e.target.value)}
+                  />
+
+                  <label htmlFor="password">Senha</label>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </>
+              )}
+
+              <button type="submit" className="submit-btn">
+                Criar Conexão
+              </button>
             </form>
           </div>
         </div>

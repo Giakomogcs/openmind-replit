@@ -18,15 +18,11 @@ import { Project } from './projects/entities/project.entity';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
-        entities: [User, Connection, Project],
-        synchronize: true, // Auto-create tables (for development)
-      }),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'mcp-db.sqlite',
+      entities: [User, Connection, Project],
+      synchronize: true,
     }),
     McpModule.forRoot({
       name: 'mcp-server',

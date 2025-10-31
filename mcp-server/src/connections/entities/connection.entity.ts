@@ -46,8 +46,17 @@ export class Connection {
   @Column({ nullable: true })
   documentationUrl: string;
 
-  @Column()
-  encryptedCredentials: string;
+  @Column({ nullable: true })
+  host: string;
+
+  @Column({ nullable: true })
+  port: number;
+
+  @Column({ nullable: true })
+  databaseName: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  credentials: any;
 
   @Column({ type: 'jsonb', nullable: true })
   draftSpecification: any;

@@ -10,13 +10,23 @@ const SchemaViewer = () => {
   const [project, setProject] = useState<any>(null);
 
   useEffect(() => {
-    const fetchProject = async () => {
-      const response = await fetch(`/api/projects/${projectId}`);
-      const data = await response.json();
-      setProject(data);
-    };
+    if (projectId) {
+      const fetchProject = async () => {
+        try {
+          const response = await fetch(`/api/projects/${projectId}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch project data');
+          }
+          const data = await response.json();
+          setProject(data);
+        } catch (error) {
+          console.error(error);
+          setProject(null);
+        }
+      };
 
-    fetchProject();
+      fetchProject();
+    }
   }, [projectId]);
 
   const renderSchema = (schema: any) => {
@@ -53,11 +63,12 @@ const SchemaViewer = () => {
 
   return (
     <Tabs defaultActiveKey="0">
-      {project.connections.map((connection: any, index: number) => (
-        <TabPane tab={connection.nomeAmigavel} key={index.toString()}>
-          {renderSchema(connection.draftSpecification)}
-        </TabPane>
-      ))}
+      {project.connections &&
+        project.connections.map((connection: any, index: number) => (
+          <TabPane tab={connection.nomeAmigavel} key={index.toString()}>
+            {renderSchema(connection.draftSpecification)}
+          </TabPane>
+        ))}
     </Tabs>
   );
 };
