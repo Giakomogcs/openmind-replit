@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input, Button, List, Avatar } from "antd";
 import { UserOutlined, RobotOutlined } from "@ant-design/icons";
 import { useAppStore } from "../store";
@@ -6,12 +6,18 @@ import { mcpService } from "../services/mcpService";
 
 const Chat = () => {
   const [inputValue, setInputValue] = useState("");
-  const { messages, addMessage } = useAppStore();
+  const { messages, addMessage, clearMessages } = useAppStore();
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+  useEffect(() => {
+    clearMessages();
+    handleSendMessage("hello");
+  }, []);
 
-    const userMessage = { content: inputValue, role: "user" as const };
+  const handleSendMessage = async (messageToSend?: string) => {
+    const message = messageToSend || inputValue;
+    if (!message.trim()) return;
+
+    const userMessage = { content: message, role: "user" as const };
     addMessage(userMessage);
     setInputValue("");
 

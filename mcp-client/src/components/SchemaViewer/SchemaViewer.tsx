@@ -57,18 +57,17 @@ const SchemaViewer = () => {
     );
   };
 
-  if (!project) {
-    return <div>Loading...</div>;
+  if (!project || !Array.isArray(project.connections)) {
+    return <div>Loading project data or no connections found...</div>;
   }
 
   return (
     <Tabs defaultActiveKey="0">
-      {project.connections &&
-        project.connections.map((connection: any, index: number) => (
-          <TabPane tab={connection.nomeAmigavel} key={index.toString()}>
-            {renderSchema(connection.draftSpecification)}
-          </TabPane>
-        ))}
+      {project.connections.map((connection: any, index: number) => (
+        <TabPane tab={connection.nomeAmigavel} key={index.toString()}>
+          {renderSchema(connection.draftSpecification)}
+        </TabPane>
+      ))}
     </Tabs>
   );
 };

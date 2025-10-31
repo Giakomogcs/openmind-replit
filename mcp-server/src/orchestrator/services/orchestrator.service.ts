@@ -70,7 +70,7 @@ export class OrchestratorService {
         throw new Error(`Project with id ${projectId} not found`);
       }
 
-      if (message === '__INITIAL_MESSAGE__') {
+      if (message.toLowerCase() === 'hello') {
         if (project.connections.length > 0) {
           return {
             message:

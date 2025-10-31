@@ -24,13 +24,15 @@ function App() {
     useAppStore();
 
   useEffect(() => {
-    const savedProjectId = localStorage.getItem("activeProjectId");
-    if (savedProjectId) {
-      setActiveProject(parseInt(savedProjectId, 10));
-    } else if (location.pathname !== "/projects") {
-      navigate("/projects");
+    if (!activeProjectId) {
+      const savedProjectId = localStorage.getItem("activeProjectId");
+      if (savedProjectId) {
+        setActiveProject(parseInt(savedProjectId, 10));
+      } else if (location.pathname !== "/projects") {
+        navigate("/projects");
+      }
     }
-  }, [setActiveProject, navigate, location.pathname]);
+  }, [activeProjectId, setActiveProject, navigate, location.pathname]);
 
   const isActive = (path: string) => location.pathname === path;
 
